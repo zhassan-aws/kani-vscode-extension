@@ -1,7 +1,7 @@
 // Copyright Kani Contributors
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 import * as vscode from 'vscode';
-import { Uri } from 'vscode';
+import { TestMessage, Uri } from 'vscode';
 
 import { connectToDebugger } from './debugger/debugger';
 import { runCargoTest } from './model/runCargoTest';
@@ -99,7 +99,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 					try {
 						await data.run(test, run);
 					} catch (e) {
-						run.errored(test, e);
+						run.errored(test, new TestMessage(`Kani executable not found.`));
 					}
 				}
 
