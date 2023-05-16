@@ -99,7 +99,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 					try {
 						await data.run(test, run);
 					} catch (e) {
-						run.errored(test, new TestMessage(`Kani executable not found.`));
+						run.errored(
+							test,
+							new TestMessage(
+								`Kani executable was not found in PATH. Please install it using the instructions at https://model-checking.github.io/kani/install-guide.html and/or make sure it is in your PATH.`,
+							),
+						);
+						break;
 					}
 				}
 
