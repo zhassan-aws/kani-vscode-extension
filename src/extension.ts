@@ -96,7 +96,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 					run.skipped(test);
 				} else {
 					run.started(test);
-					await data.run(test, run);
+					try {
+						await data.run(test, run);
+					}
+					catch (e) {
+						run.errored(test, e);
+					}
 				}
 
 				run.appendOutput(`Completed ${test.id}\r\n`);

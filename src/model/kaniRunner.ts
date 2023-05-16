@@ -39,7 +39,7 @@ export function getKaniPath(kaniCommand: string): Promise<string> {
 		execFile('which', [kaniCommand], options, (error, stdout, stderr) => {
 			if (error) {
 				console.error(`execFile error: ${error}`);
-				return;
+				reject(new Error(`Kani executable was not found in PATH. Please install it using the instructions at https://model-checking.github.io/kani/install-guide.html and/or make sure it is in your PATH.`));
 			}
 			if (stderr) {
 				console.error(`stderr: ${stderr}`);
@@ -82,13 +82,20 @@ export async function runKaniCommand(
 	const args = commmandSplit.args;
 
 	if (command == 'cargo' || command == 'cargo kani') {
-		const kaniBinaryPath = await getKaniPath('cargo-kani');
-		const options = {
-			shell: false,
-			cwd: directory,
-		};
+		try {
+			const kaniBinaryPath = await getKaniPath('cargo-kani');
 
-		return executeKaniProcess(kaniBinaryPath, args, options, cargoKaniMode);
+			const options = {
+				shell: false,
+				cwd: directory,
+			};
+
+			return executeKaniProcess(kaniBinaryPath, args, options, cargoKaniMode);
+		}
+		catch (e) {
+			console.error(e);
+			return false;
+		}
 	} else {
 		return false;
 	}
