@@ -98,8 +98,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 					run.started(test);
 					try {
 						await data.run(test, run);
-					}
-					catch (e) {
+					} catch (e) {
 						run.errored(test, e);
 					}
 				}
